@@ -1,0 +1,46 @@
+﻿@model IEnumerable<SupBlog.Data.Models.Article>
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Статьи</h1>
+</div>
+
+<div class="container" style="width: 700px">
+    @foreach (var article in @Model)
+    {
+        <article class="m-3">
+            <div class="row">
+                <div class="col-sm">
+                    <a href="">
+                        <img src="@article.HeroImageSource" width="200" height="200" />
+                    </a>
+                </div>
+                <div class="col-sm">
+                    <div class="row">
+                        <h2 class="display-6">@article.Name</h2>
+                    </div>
+                    <div class="row">
+                        <h4>@article.ShortDescription</h4>
+                    </div>
+                    <div class="row">
+                        Автор: @article.User
+                    </div>
+                    <div class="row">
+                        Категория: @article.Category.Name
+                    </div>
+                    <div class="row">
+                        Теги:
+                        <ul class="list-group list-group-horizontal-sm">
+                            @foreach (var tag in article.Tags)
+                            {
+                                <li class="list-group-item">@tag.Name</li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </article>
+    }
+</div>

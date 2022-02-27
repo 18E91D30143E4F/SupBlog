@@ -1,0 +1,52 @@
+﻿@model SupBlog.Web.Models.ViewModels.Redactor.CreateArticleViewModel
+
+<h1>View</h1>
+
+<h4>Article</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="AddArticle">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-control">
+                <label asp-for="Article.Name" class="col-form-label"></label>
+                <input asp-for="Article.Name" class="form-control" />
+                <span asp-validation-for="Article.Name" class="text-danger"></span>
+            </div>
+            <div class="form-control">
+                <label asp-for="Article.ShortDescription" class="col-form-label"></label>
+                <input asp-for="Article.ShortDescription" class="form-control" />
+                <span asp-validation-for="Article.ShortDescription" class="text-danger"></span>
+            </div>
+            <div class="form-control">
+                <label asp-for="Article.Description" class="col-form-label"></label>
+                <textarea asp-for="Article.Description" class="form-control"></textarea>
+                <span asp-validation-for="Article.Description" class="text-danger"></span>
+            </div>
+            <div class="form-control">
+                <label asp-for="Article.HeroImageSource" class="col-form-label"></label>
+                <input asp-for="Article.HeroImageSource" class="form-control" />
+                <span asp-validation-for="Article.HeroImageSource" class="text-danger"></span>
+            </div>
+            <div class="form-control">
+                <label class="col-form-label">Категория</label>
+                @Html.DropDownListFor(vm => vm.Article.Category.Name, new SelectList(@Model.Categories, null, "Name"), "Выбранная категория", new { @class = "form-control" })
+                <span asp-validation-for="Article.Category.Name" class="text-danger"></span>
+            </div>
+            <div class="form-control">
+                <label class="col-form-label">Теги</label>
+                @Html.ListBoxFor(vm => vm.AcceptedTags, new SelectList(@Model.AllTags, null, "Name"), new { @class = "form-control" })
+                <span asp-validation-for="AcceptedTags" class="text-danger"></span>
+            </div>
+            <input type="submit" value="Create" class="btn btn-primary" />
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,49 @@
+﻿@model IEnumerable<SupBlog.Domain.ArticleDomain>
+<style type="text/css">
+    .down {
+        border-bottom: solid 3px black;
+    }
+
+    .border {
+        border: solid 3px black;
+        border-bottom: solid 1px black;
+    }
+</style>
+
+
+<div class="text-center">
+    <h1 class="display-4">Мои статьи</h1>
+</div>
+<div class="container" style="width: 700px">
+
+    @foreach (var article in @Model)
+    {
+        <div class="row" style="height: 300px;">
+            <div class="border down col-sm-4" style="background-color: yellow;" id="articleImage">
+                <a href="">
+                    <img src="@article.HeroImageSource" width="200" height="200" />
+                </a>
+            </div>
+            <div class="col-sm-8" style="background-color: pink; height: 100%;" id="articleDivs">
+                <div class="border row" style="height: 10%">
+                    <h2 class="display-6">@article.Name</h2>
+                </div>
+                <div class="border row" style="height: 40%">
+                    <h4>@article.ShortDescription</h4>
+                </div>
+                <div class="border row" style="height: 40%">
+                    Категория: @article.Category.Name. Автор: @article.User
+                </div>
+                <div class="border down row" style="height: 10%">
+                    Теги:
+                    <ul class="list-group list-group-horizontal-sm">
+                        @foreach (var tag in article.Tags)
+                        {
+                            <li class="list-group-item">@tag.Name</li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    }
+</div>
