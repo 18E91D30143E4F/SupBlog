@@ -9,13 +9,13 @@ namespace SupBlog.Mappers
     {
         public static ArticleDomain ToDomain(this Article article)
         {
-            return new ArticleDomain
+            return new()
             {
                 Name = article.Name,
                 User = article.User,
                 Tags = article.Tags,
                 Category = article.Category.ToDomain(),
-                ShortDescription = article.Description,
+                ShortDescription = article.ShortDescription,
                 Description = article.Description,
                 HeroImageSource = article.HeroImageSource,
                 Id = article.Id
@@ -30,7 +30,7 @@ namespace SupBlog.Mappers
                 User = article.User,
                 Tags = article.Tags,
                 Category = article.Category.ToDomain(),
-                ShortDescription = article.Description,
+                ShortDescription = article.ShortDescription,
                 Description = article.Description,
                 HeroImageSource = article.HeroImageSource,
                 Id = article.Id
@@ -39,16 +39,16 @@ namespace SupBlog.Mappers
 
         public static Article ToEntity(this ArticleDomain article)
         {
-            return new Article
+            return new()
             {
                 Name = article.Name,
-                User = article.User,
                 Tags = article.Tags,
-                Category = article.Category.ToEntity(),
-                ShortDescription = article.Description,
+                ShortDescription = article.ShortDescription,
                 Description = article.Description,
                 HeroImageSource = article.HeroImageSource,
-                Id = article.Id
+                Id = article.Id,
+                CategoryId = article.Category.Id,
+                UserId = article.User.Id
             };
         }
     }

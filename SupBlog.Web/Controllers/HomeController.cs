@@ -1,24 +1,21 @@
-﻿using System.Collections.Generic;
+﻿using System.Diagnostics;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SupBlog.Data;
-using SupBlog.Web.Models;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
-using SupBlog.Data.Models;
-using SupBlog.Data.Repositories;
+using SupBlog.Mappers;
 using SupBlog.Services;
+using SupBlog.Web.Models;
 
 namespace SupBlog.Web.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-        private readonly ApplicationDbContext _DbContext;
         private readonly ArticleService _ArticleService;
-        private readonly GuestService _GuestService;
         private readonly CategoryService _CategoryService;
+        private readonly ApplicationDbContext _DbContext;
+        private readonly GuestService _GuestService;
+        private readonly ILogger<HomeController> _logger;
         private readonly TagService _TagService;
 
         public HomeController(ILogger<HomeController> logger, ApplicationDbContext dbContext)
@@ -35,9 +32,12 @@ namespace SupBlog.Web.Controllers
         {
             var ar = await _ArticleService._ArticleRepository.GetAll();
 
-            //var guestService = new GuestService(_DbContext);
-
             return View(await _GuestService.GetArticles().ConfigureAwait(false));
+        }
+
+        public async Task<IActionResult> DetailArticle(int id)
+        {
+            return View((await _GuestService.GetArticleById(id)).ToDomain());
         }
 
         public IActionResult Privacy()

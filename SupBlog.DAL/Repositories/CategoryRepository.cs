@@ -1,7 +1,4 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using SupBlog.Data.Models;
+﻿using SupBlog.Data.Models;
 
 namespace SupBlog.Data.Repositories
 {

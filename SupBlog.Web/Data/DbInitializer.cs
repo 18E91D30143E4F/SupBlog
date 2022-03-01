@@ -1,9 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using SupBlog.Data;
 using SupBlog.Data.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace SupBlog.Web.Data
 {
@@ -11,40 +9,33 @@ namespace SupBlog.Web.Data
     {
         private readonly ApplicationDbContext _Db;
 
-        public DbInitializer(ApplicationDbContext db) => _Db = db;
+        public DbInitializer(ApplicationDbContext db)
+        {
+            _Db = db;
+        }
 
         public void Initialize()
         {
             _Db.Database.Migrate();
 
-            if (_Db.Articles.Any()) return;
+            if (_Db.Categories.Any() && _Db.Tags.Any()) return;
 
-            for (var i = 0; i < 5; i++)
+            foreach (var categoryName in new[] { "Кухня", "Дом", "Столовая", "Компьютеры", "Техника" })
             {
-                var article = new Article
+                var category = new Category
                 {
-                    Category = new Category
-                    {
-                        Name = $"Category {i}"
-                    },
-                    Description = $"Description {i}",
-                    Name = $"Article {i}",
-                    HeroImageSource = $"Image src {i}",
-                    ShortDescription = $"Short {i}"
+                    Name = categoryName
                 };
+                _Db.Categories.Add(category);
+            }
 
-                var tags = new List<Tag>();
-
-                for (var (j, count) = (0, new Random().Next(5, 10)); j < count; j++)
+            foreach (var tagName in new[] { "Жизнь-Сказка", "Политологи", "НетОжирению", "ПочемуМы" })
+            {
+                var tag = new Tag
                 {
-                    tags.Add(new Tag
-                    {
-                        Name = $"Tag {j}"
-                    });
-                }
-
-                article.Tags = tags;
-                _Db.Articles.Add(article);
+                    Name = tagName
+                };
+                _Db.Tags.Add(tag);
             }
 
             _Db.SaveChanges();

@@ -7,14 +7,16 @@ using SupBlog.Data;
 using SupBlog.Data.Models;
 using SupBlog.Data.Repositories;
 using SupBlog.Data.Repositories.Base;
+using SupBlog.Domain;
+using SupBlog.Mappers;
 
 namespace SupBlog.Services
 {
     public class RedactorService
     {
-        private readonly ApplicationDbContext _DbContext;
         private readonly IRepository<Article> _ArticleRepository;
         private readonly CategoryRepository _CategoryRepository;
+        private readonly ApplicationDbContext _DbContext;
         private readonly TagRepository _TagRepository;
 
         public RedactorService(ApplicationDbContext dbContext)
@@ -54,6 +56,11 @@ namespace SupBlog.Services
         public async Task<IEnumerable<Tag>> GetTags()
         {
             return await _TagRepository.GetAll().ConfigureAwait(false);
+        }
+
+        public async Task<ArticleDomain> GetArticleById(int id)
+        {
+            return (await _ArticleRepository.GetById(id).ConfigureAwait(false)).ToDomain();
         }
     }
 }

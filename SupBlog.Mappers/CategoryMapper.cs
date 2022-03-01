@@ -7,7 +7,7 @@ namespace SupBlog.Mappers
     {
         public static Category ToEntity(this CategoryDomain category)
         {
-            return new Category
+            return new()
             {
                 Articles = category.Articles,
                 Id = category.Id,
@@ -17,7 +17,7 @@ namespace SupBlog.Mappers
 
         public static CategoryDomain ToDomain(this Category category)
         {
-            return new CategoryDomain
+            return new()
             {
                 Articles = category.Articles,
                 Id = category.Id,

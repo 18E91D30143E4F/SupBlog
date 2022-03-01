@@ -1,10 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
-using SupBlog.Data.Models.Base;
-using SupBlog.Data.Repositories.Base;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using SupBlog.Data.Models.Base;
+using SupBlog.Data.Repositories.Base;
 
 namespace SupBlog.Data.Repositories
 {
@@ -12,14 +12,14 @@ namespace SupBlog.Data.Repositories
     {
         private readonly ApplicationDbContext _db;
 
-        protected DbSet<T> Set { get; }
-        protected virtual IQueryable<T> Items => Set;
-
         public DbRepository(ApplicationDbContext db)
         {
             _db = db;
             Set = _db.Set<T>();
         }
+
+        protected DbSet<T> Set { get; }
+        protected virtual IQueryable<T> Items => Set;
 
         public async Task<bool> ExistId(int id)
         {
@@ -52,7 +52,6 @@ namespace SupBlog.Data.Repositories
                 .ConfigureAwait(false);
         }
 
-        protected record Page(IEnumerable<T> Items, int TotalCount, int PageIndex, int PageSize) : IPage<T>;
         public async Task<IPage<T>> GetPage(int pageIndex, int pageSize)
         {
             if (pageSize <= 0) return new Page(Enumerable.Empty<T>(), pageSize, pageIndex, pageSize);
@@ -107,7 +106,7 @@ namespace SupBlog.Data.Repositories
         {
             if (item is null) throw new ArgumentNullException(nameof(item));
 
-            if (!(await ExistId(item.Id)))
+            if (!await ExistId(item.Id))
                 return null;
 
             _db.Remove(item);
@@ -128,5 +127,7 @@ namespace SupBlog.Data.Repositories
 
             return await Delete(item).ConfigureAwait(false);
         }
+
+        protected record Page(IEnumerable<T> Items, int TotalCount, int PageIndex, int PageSize) : IPage<T>;
     }
 }

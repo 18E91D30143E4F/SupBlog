@@ -1,12 +1,12 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SupBlog.Data;
 using SupBlog.Data.Models;
 using SupBlog.Web.Data;
-using System;
-using System.Threading.Tasks;
 
 namespace SupBlog.Web.Configuration
 {
@@ -43,10 +43,10 @@ namespace SupBlog.Web.Configuration
             var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
             var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
             Task<IdentityResult> roleResult;
-            string email = "someone@somewhere.com";
+            var email = "someone@somewhere.com";
 
             //Check that there is an Administrator role and create if not
-            Task<bool> hasAdminRole = roleManager.RoleExistsAsync("Administrator");
+            var hasAdminRole = roleManager.RoleExistsAsync("Administrator");
             hasAdminRole.Wait();
 
             if (!hasAdminRole.Result)
@@ -58,21 +58,21 @@ namespace SupBlog.Web.Configuration
             //Check if the admin user exists and create it if not
             //Add to the Administrator role
 
-            Task<ApplicationUser> testUser = userManager.FindByEmailAsync(email);
+            var testUser = userManager.FindByEmailAsync(email);
             testUser.Wait();
 
             if (testUser.Result == null)
             {
-                ApplicationUser administrator = new ApplicationUser();
+                var administrator = new ApplicationUser();
                 administrator.Email = email;
                 administrator.UserName = email;
 
-                Task<IdentityResult> newUser = userManager.CreateAsync(administrator, "_AStrongP@ssword!");
+                var newUser = userManager.CreateAsync(administrator, "_AStrongP@ssword!");
                 newUser.Wait();
 
                 if (newUser.Result.Succeeded)
                 {
-                    Task<IdentityResult> newUserRole = userManager.AddToRoleAsync(administrator, "Administrator");
+                    var newUserRole = userManager.AddToRoleAsync(administrator, "Administrator");
                     newUserRole.Wait();
                 }
             }

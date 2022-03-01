@@ -1,11 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net5.0</TargetFramework>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\SupBlog.DAL\SupBlog.Data.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\SupBlog.DAL\SupBlog.Data.csproj" />
+		<ProjectReference Include="..\SupBlog.Domain\SupBlog.Domain.csproj" />
+		<ProjectReference Include="..\SupBlog.Mappers\SupBlog.Mappers.csproj" />
+	</ItemGroup>
 
 </Project>

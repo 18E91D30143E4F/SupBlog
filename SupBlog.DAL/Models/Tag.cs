@@ -1,5 +1,5 @@
-﻿using SupBlog.Data.Models.Base;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using SupBlog.Data.Models.Base;
 
 namespace SupBlog.Data.Models
 {

@@ -30,12 +30,12 @@
             </div>
             <div class="form-control">
                 <label class="col-form-label">Категория</label>
-                @Html.DropDownListFor(vm => vm.Article.Category.Name, new SelectList(@Model.Categories, null, "Name"), "Выбранная категория", new { @class = "form-control" })
+                @Html.DropDownListFor(vm => vm.Article.Category.Name, new SelectList(Model.Categories, null, "Name"), "Выбранная категория", new { @class = "form-control" })
                 <span asp-validation-for="Article.Category.Name" class="text-danger"></span>
             </div>
             <div class="form-control">
                 <label class="col-form-label">Теги</label>
-                @Html.ListBoxFor(vm => vm.AcceptedTags, new SelectList(@Model.AllTags, null, "Name"), new { @class = "form-control" })
+                @Html.ListBoxFor(vm => vm.AcceptedTags, new SelectList(Model.AllTags, null, "Name"), new { @class = "form-control" })
                 <span asp-validation-for="AcceptedTags" class="text-danger"></span>
             </div>
             <input type="submit" value="Create" class="btn btn-primary" />
@@ -48,5 +48,5 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 }

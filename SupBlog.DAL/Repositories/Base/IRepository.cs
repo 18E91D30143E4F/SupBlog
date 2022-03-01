@@ -1,6 +1,6 @@
-﻿using SupBlog.Data.Models.Base;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using SupBlog.Data.Models.Base;
 
 namespace SupBlog.Data.Repositories.Base
 {

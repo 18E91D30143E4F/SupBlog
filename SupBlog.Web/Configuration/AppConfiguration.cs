@@ -7,7 +7,8 @@ namespace SupBlog.Web.Configuration
 {
     public static class AppConfiguration
     {
-        public static void AddDefaultConfiguration(this IApplicationBuilder app, IWebHostEnvironment env, DbInitializer dbInitializer)
+        public static void AddDefaultConfiguration(this IApplicationBuilder app, IWebHostEnvironment env,
+            DbInitializer dbInitializer)
         {
             dbInitializer.Initialize();
 
@@ -21,6 +22,7 @@ namespace SupBlog.Web.Configuration
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
@@ -32,8 +34,8 @@ namespace SupBlog.Web.Configuration
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    "default",
+                    "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
         }

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -6,10 +6,8 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using SupBlog.Data;
 using SupBlog.Data.Models;
-using SupBlog.Domain;
 using SupBlog.Mappers;
 using SupBlog.Services;
 using SupBlog.Web.Models;
@@ -20,9 +18,9 @@ namespace SupBlog.Web.Controllers
     public class RedactorController : Controller
     {
         private readonly ApplicationDbContext _DbContext;
+        private readonly IMapper _Mapper;
         private readonly RedactorService _RedactorService;
         private readonly UserManager<ApplicationUser> _UserManager;
-        private readonly IMapper _Mapper;
 
         public RedactorController(
             ApplicationDbContext dbContext,
@@ -33,12 +31,6 @@ namespace SupBlog.Web.Controllers
             _RedactorService = new RedactorService(_DbContext);
             _UserManager = manager;
             _Mapper = mapper;
-        }
-
-        [Authorize(Roles = "Redactor")]
-        public IActionResult Index()
-        {
-            return View();
         }
 
         [Authorize(Roles = "Redactor")]
@@ -64,39 +56,71 @@ namespace SupBlog.Web.Controllers
                 AllTags = await _RedactorService.GetTags()
             };
 
-            return View("Create", model);
+            return View("CreateArticle", model);
         }
 
         [HttpPost]
         [Authorize(Roles = "Redactor")]
         public async Task<IActionResult> AddArticle(CreateArticleViewModel viewModel)
         {
-            if (viewModel.Article.Tags != null)
-                viewModel.Article.Tags = _RedactorService.GetTagsByNames(viewModel.AcceptedTags.ToArray());
+            try
+            {
+                var articleDomain = viewModel.Article;
+                if (viewModel.AcceptedTags != null)
+                    articleDomain.Tags = _RedactorService.GetTagsByNames(viewModel.AcceptedTags.ToArray());
+                articleDomain.User = new ApplicationUser { Id = await GetCurrentUserId() };
+                articleDomain.Category.Id = (await _RedactorService.GetCategoryByName(articleDomain.Category.Name)
+                    .ConfigureAwait(false)).Id;
 
-            var categoryEntity = await _RedactorService.GetCategoryByName(viewModel.Article.Category.Name)
-                .ConfigureAwait(false);
+                await _RedactorService.AddArticle(articleDomain.ToEntity()).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                return View("Error", new ErrorViewModel());
+            }
 
-            _DbContext.Entry(categoryEntity).State = EntityState.Detached;
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            viewModel.Article.Category = categoryEntity.ToDomain();
+            var res = (await _RedactorService.GetUserArticles(userId)).ToDomain();
 
-            var currentUser = this.User;
-            var currentUserName = currentUser.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            viewModel.Article.User = await _UserManager.FindByIdAsync(currentUserName);
-
-            var article = viewModel.Article.ToEntity();
-
-            await _RedactorService.AddArticle(article).ConfigureAwait(false);
-
-            return View("Index");
+            return View("Articles", res);
         }
 
-        /*        [HttpPost]
-                [Authorize(Roles = "Redactor")]
-                public async Task<IActionResult> AddArticle(Article article)
-                {
-                    return View();
-                }*/
+        [Authorize(Roles = "Redactor")]
+        public async Task<IActionResult> DetailArticle(int id)
+        {
+            try
+            {
+                var article = await _RedactorService.GetArticleById(id);
+
+                return View("DetailArticle", article);
+            }
+            catch (Exception e)
+            {
+                return View("Error", new ErrorViewModel());
+            }
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Redactor")]
+        public IActionResult CreateCategory()
+        {
+            return View("Category/Add");
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Redactor")]
+        public async Task<IActionResult> CreateCategory(Category category)
+        {
+            return View("Category/Add");
+        }
+
+        private async Task<Guid> GetCurrentUserId()
+        {
+            var currentUser = User;
+            var currentUserName = currentUser.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            return (await _UserManager.FindByIdAsync(currentUserName).ConfigureAwait(false)).Id;
+        }
     }
 }

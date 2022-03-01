@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using SupBlog.Data.Models;
+﻿using SupBlog.Data.Models;
 
 namespace SupBlog.Data.Repositories
 {

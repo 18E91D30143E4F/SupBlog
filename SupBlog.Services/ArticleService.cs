@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using SupBlog.Data;
+﻿using SupBlog.Data;
 using SupBlog.Data.Models;
 using SupBlog.Data.Repositories;
 using SupBlog.Data.Repositories.Base;
@@ -9,8 +7,8 @@ namespace SupBlog.Services
 {
     public class ArticleService
     {
-        private readonly ApplicationDbContext _DbContext;
         public readonly IRepository<Article> _ArticleRepository;
+        private readonly ApplicationDbContext _DbContext;
 
         public ArticleService(ApplicationDbContext dbContext)
         {

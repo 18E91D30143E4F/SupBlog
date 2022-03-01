@@ -16,33 +16,38 @@
 </div>
 <div class="container" style="width: 700px">
 
-    @foreach (var article in @Model)
+    @foreach (var article in Model)
     {
-        <div class="row" style="height: 300px;">
-            <div class="border down col-sm-4" style="background-color: yellow;" id="articleImage">
-                <a href="">
-                    <img src="@article.HeroImageSource" width="200" height="200" />
-                </a>
+        <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+            <div class="col p-4 d-flex flex-column position-static">
+                <strong class="d-inline-block mb-2 text-primary">@article.Category.Name</strong>
+                <h3 class="mb-0">@article.Name</h3>
+                <div class="mb-1 text-muted">12 Ноября</div>
+                @if (article.ShortDescription != null)
+                {
+                    <p class="card-text mb-auto">@article.ShortDescription</p>
+                }
+                else
+                {
+                    <p class="card-text mb-auto">Описание отсутствует :((</p>
+                }
+                Теги:
+                @foreach (var tag in article.Tags)
+                {
+                    @(tag.Name + " ;")
+                }
             </div>
-            <div class="col-sm-8" style="background-color: pink; height: 100%;" id="articleDivs">
-                <div class="border row" style="height: 10%">
-                    <h2 class="display-6">@article.Name</h2>
-                </div>
-                <div class="border row" style="height: 40%">
-                    <h4>@article.ShortDescription</h4>
-                </div>
-                <div class="border row" style="height: 40%">
-                    Категория: @article.Category.Name. Автор: @article.User
-                </div>
-                <div class="border down row" style="height: 10%">
-                    Теги:
-                    <ul class="list-group list-group-horizontal-sm">
-                        @foreach (var tag in article.Tags)
-                        {
-                            <li class="list-group-item">@tag.Name</li>
-                        }
-                    </ul>
-                </div>
+            <div class="col-auto d-none d-lg-block">
+                <a href="@Url.Action("DetailArticle", "Redactor", new {id = article.Id})">
+                    @if (article.HeroImageSource != null)
+                    {
+                        <img src="@article.HeroImageSource" height="200" width="200" />
+                    }
+                    else
+                    {
+                        <img src="https://img.freepik.com/free-vector/photo-frame-icon-empty-photo-blank-vector-on-isolated-transparent-background-eps-10_399089-1290.jpg" height="200" width="200" />
+                    }
+                </a>
             </div>
         </div>
     }

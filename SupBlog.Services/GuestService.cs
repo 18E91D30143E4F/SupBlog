@@ -10,7 +10,7 @@ namespace SupBlog.Services
     public class GuestService
     {
         private readonly ApplicationDbContext _DbContext;
-        private IRepository<Article> _ArticleRepository;
+        private readonly IRepository<Article> _ArticleRepository;
 
         public GuestService(ApplicationDbContext dbContext)
         {
@@ -21,6 +21,11 @@ namespace SupBlog.Services
         public async Task<IEnumerable<Article>> GetArticles()
         {
             return await _ArticleRepository.GetAll().ConfigureAwait(false);
+        }
+
+        public async Task<Article> GetArticleById(int id)
+        {
+            return await _ArticleRepository.GetById(id).ConfigureAwait(false);
         }
     }
 }
